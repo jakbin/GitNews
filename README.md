@@ -9,10 +9,16 @@
 - clone repo 
   
   ```shell
-  git clone https://github.com/jakbin/gitnews
+  git clone https://github.com/jakbin/gitnews.git
   ```
 
 - Set Telegram bot token in `config.py`
+  or
+  set with heroku cli
+  ```sh
+  heroku config:set ENV=True
+  heroku config:set BOT_TOKEN=Bot_Token
+  ```
 
 - create your app with heroku cli
   
