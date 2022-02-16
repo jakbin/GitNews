@@ -1,1 +1,1 @@
-web: gunicorn GitGram:server
+web: gunicorn GitNews:server
