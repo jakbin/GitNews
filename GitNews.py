@@ -21,18 +21,14 @@ if ENV:
     PROJECT_NAME = environ.get('PROJECT_NAME', None)
     ip_addr = environ.get('APP_URL', None)
     # You kanged our project without forking it, we'll get you DMCA'd.
-    GIT_REPO_URL = environ.get('GIT_REPO_URL', "https://github.com/MadeByThePinsHub/GitGram")
+    GIT_REPO_URL = environ.get('GIT_REPO_URL', "https://github.com/jakbin/GitNews")
 else:
     BOT_TOKEN = config.BOT_TOKEN
     PROJECT_NAME = config.PROJECT_NAME
     ip_addr = get('https://api.ipify.org').text
     GIT_REPO_URL = config.GIT_REPO_URL
 
-updater = Updater(token=BOT_TOKEN, workers=1)
-dispatcher = updater.dispatcher
-
-print("If you need more help, join @GitGramChat in Telegram.")
-
+print("If you need more help, visit https://github.com/jakbin/GitNews")
 
 def start(_bot, update):
     """/start message for bot"""
@@ -77,6 +73,9 @@ def getSourceCodeLink(_bot, update):
     )
 
 
+updater = Updater(token=BOT_TOKEN, workers=1)
+dispatcher = updater.dispatcher
+
 start_handler = CommandHandler("start", start)
 help_handler = CommandHandler("help", help)
 supportCmd = CommandHandler("support", support)
@@ -87,6 +86,7 @@ dispatcher.add_handler(help_handler)
 dispatcher.add_handler(supportCmd)
 dispatcher.add_handler(sourcecode)
 updater.start_polling()
+    
 
 TG_BOT_API = f'https://api.telegram.org/bot{BOT_TOKEN}/'
 checkbot = get(TG_BOT_API + "getMe").json()
@@ -304,32 +304,6 @@ def git_api(groupid):
             "\nLatest commit:\n<a href='{data['commit']['commit']['url']}'>{escape(data['commit']['commit']['message'])}</a>",
             "html")
         return response
-
-    url = deldog(data)
-    response = post_tg(
-        groupid,
-        "🚫 Webhook endpoint for this chat has received something that doesn't understood yet. " +
-        f"\n\nLink to logs for debugging: {url}",
-        "markdown")
-    return response
-
-
-def deldog(data):
-    """Pasing the stings to del.dog"""
-    BASE_URL = 'https://del.dog'
-    r = post(f'{BASE_URL}/documents', data=str(data).encode('utf-8'))
-    if r.status_code == 404:
-        r.raise_for_status()
-    res = r.json()
-    if r.status_code != 200:
-        r.raise_for_status()
-    key = res['key']
-    if res['isUrl']:
-        reply = f'DelDog URL: {BASE_URL}/{key}\nYou can view stats, etc. [here]({BASE_URL}/v/{key})'
-    else:
-        reply = f'{BASE_URL}/{key}'
-    return reply
-
 
 if __name__ == "__main__":
     # We can't use port 80 due to the root access requirement.
